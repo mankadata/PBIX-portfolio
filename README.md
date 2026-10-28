@@ -2,7 +2,7 @@
 
 A Power BI report built on FAOSTAT data. It shows where coffee is grown, where it is traded, and where the money in the chain ends up.
 
-### ▶ [Open the live report](https://mankadata.github.io/PBIX-portfolio/)
+#### ▶ [Open the live report](https://mankadata.github.io/PBIX-portfolio/)
 
 Interactive — click through the pages, hover the visuals, use the slicers. No download and no Power BI licence needed.
 
@@ -80,5 +80,6 @@ If you want to talk about how a particular part is built, ask me and I will walk
 
 ---
 
-**Mariann M. · [LinkedIn](https://www.linkedin.com/in/mmariann/)
-Budapest, Hungary · 2026** 
+**Mariann M.** · [LinkedIn](https://www.linkedin.com/in/mmariann/)
+
+**Budapest, Hungary · 2026** 

@@ -9,7 +9,10 @@ Interactive — click through the pages, hover the visuals, use the slicers. No 
 <!-- Optional, once you have a screenshot:
 ![The World of Coffee — cover](docs/screenshots/cover.png)
 -->
-<img width="1382" height="777" alt="image" src="https://github.com/user-attachments/assets/07ab7e52-f6c7-4853-8ac5-0cc06efd0dd2" />
+
+<img width="1044" height="583" alt="image" src="https://github.com/user-attachments/assets/c4e2770f-b781-43f2-8fa6-6f2ae3d8d61f" />
+
+<img width="1039" height="585" alt="image" src="https://github.com/user-attachments/assets/17701a0b-b6ca-44d6-9eeb-3a9ca95f4014" />
 
 ---
 
@@ -32,14 +35,6 @@ The visuals on the Production and Trade pages are HTML and SVG, generated in DAX
 | **Item** | FAO item code `656` — coffee, green |
 | **Period** | 2010–2024 |
 | **Grain** | Country × year × element |
-
-### One thing worth knowing about FAOSTAT
-
-The API returns aggregate rows alongside country rows: *World*, *Africa*, *European Union (27)*, *Least Developed Countries*, *Small Island Developing States*, and others. They arrive in the same response, in the same shape, with the same column names.
-
-Left in, they are counted twice — or five times, depending on how many aggregates a country belongs to. Every total in the report would run **4 to 7 times too high**, and nothing about the output would look obviously wrong.
-
-I found it because the same country showed 33.2% in one visual and 4.6% in another on the same page. The aggregates are filtered out in Power Query, against the country list from the FAOSTAT country endpoint rather than against a hand-typed list of names.
 
 ---
 
@@ -79,10 +74,11 @@ Custom HTML visuals are popular right now, and the screenshots look great. Peopl
 
 ## Why there is no .pbix here
 
-The report is published as a read-only public embed instead. The visuals, the measures and the layout are the work; I am happy for people to look at all of it and not to fork it wholesale.
+The report is published as a read-only public embed. The visuals, the measures and the layout are the work. I am happy for people to look at all of it, but not to copy it wholesale.
 
-If you want to talk about how a particular piece is built, ask me — I will walk you through it.
+If you want to talk about how a particular part is built, ask me and I will walk you through it.
 
 ---
 
-**Mariann Matyóka** · [LinkedIn](https://www.linkedin.com/in/mmariann/)
+**Mariann M. · [LinkedIn](https://www.linkedin.com/in/mmariann/)
+Budapest, Hungary · 2026** 

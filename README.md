@@ -9,6 +9,7 @@ Interactive — click through the pages, hover the visuals, use the slicers. No 
 <!-- Optional, once you have a screenshot:
 ![The World of Coffee — cover](docs/screenshots/cover.png)
 -->
+<img width="1382" height="777" alt="image" src="https://github.com/user-attachments/assets/07ab7e52-f6c7-4853-8ac5-0cc06efd0dd2" />
 
 ---
 

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The World of Coffee — Power BI Report</title>
+<meta name="description" content="An interactive Power BI report on global coffee production and trade, built on live FAOSTAT API data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1B1613;
+    --ink-soft:rgba(27,22,19,0.66);
+    --ink-faint:rgba(27,22,19,0.42);
+    --cream:#EFE9DC;
+    --cream-deep:#E4DCCB;
+    --paper:#F7F3EA;
+    --roast:#4A332A;
+    --sage:#7D8F6E;
+    --sage-deep:#5F7154;
+    --line:rgba(27,22,19,0.12);
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+
+  /* ---------- header ---------- */
+  header{
+    background:
+      radial-gradient(120% 140% at 15% 0%, #2A1F18 0%, #1B1613 55%, #140F0C 100%);
+    color:var(--cream);
+    padding:56px 0 48px;
+    border-bottom:4px solid var(--sage-deep);
+  }
+  .eyebrow{
+    font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--sage);margin:0 0 18px;
+  }
+  h1{
+    font-family:Lora,Georgia,serif;
+    font-weight:700;
+    font-size:clamp(34px,5.6vw,60px);
+    line-height:1.04;
+    letter-spacing:-0.01em;
+    margin:0 0 16px;
+  }
+  h1 em{font-style:italic;font-weight:400;color:var(--sage)}
+  .sub{
+    max-width:60ch;
+    font-size:clamp(15px,1.5vw,18px);
+    font-weight:300;
+    color:rgba(239,233,220,0.78);
+    margin:0;
+  }
+  .byline{
+    margin:28px 0 0;
+    font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
+    color:rgba(239,233,220,0.5);
+  }
+  .byline a{color:var(--sage);text-decoration:none;border-bottom:1px solid rgba(125,143,110,0.4)}
+  .byline a:hover{border-bottom-color:var(--sage)}
+
+  /* ---------- embed ---------- */
+  .embed-section{padding:44px 0 8px}
+  .embed-head{
+    display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 20px;
+    margin:0 0 18px;
+  }
+  .embed-head h2{
+    font-family:Lora,Georgia,serif;font-size:22px;font-weight:600;margin:0;
+  }
+  .hint{
+    font-size:13px;color:var(--ink-soft);margin:0;
+  }
+  .frame{
+    position:relative;
+    width:100%;
+    padding-top:56.25%;            /* 16:9 — matches the 1280x720 canvas */
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 18px 48px -24px rgba(27,22,19,0.45);
+  }
+  .frame iframe{
+    position:absolute;inset:0;width:100%;height:100%;border:0;display:block;
+  }
+  .fallback{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;padding:24px;text-align:center;
+    font-size:14px;color:var(--ink-faint);
+  }
+  .actions{
+    display:flex;flex-wrap:wrap;gap:10px;
+    margin:18px 0 0;
+  }
+  .btn{
+    display:inline-block;
+    padding:11px 20px;
+    border-radius:999px;
+    font-size:13px;font-weight:600;letter-spacing:.04em;
+    text-decoration:none;
+    transition:background .25s ease,color .25s ease,border-color .25s ease;
+  }
+  .btn-main{background:var(--roast);color:var(--cream);border:1px solid var(--roast)}
+  .btn-main:hover{background:var(--ink)}
+  .btn-ghost{background:transparent;color:var(--roast);border:1px solid rgba(74,51,42,0.3)}
+  .btn-ghost:hover{border-color:var(--roast);background:rgba(74,51,42,0.06)}
+
+  /* ---------- notes ---------- */
+  .notes{padding:52px 0 72px}
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(248px,1fr));
+    gap:18px;
+    margin:0 0 40px;
+  }
+  .card{
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:22px;
+  }
+  .card h3{
+    font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--sage-deep);margin:0 0 10px;
+  }
+  .card p{margin:0;font-size:14px;color:var(--ink-soft)}
+  .card strong{color:var(--ink);font-weight:600}
+
+  .colophon{
+    border-top:1px solid var(--line);
+    padding-top:26px;
+    font-size:13px;color:var(--ink-faint);
+    max-width:72ch;
+  }
+  .colophon a{color:var(--sage-deep)}
+  .colophon p{margin:0 0 10px}
+
+  @media (max-width:640px){
+    header{padding:40px 0 34px}
+    .embed-section{padding:30px 0 4px}
+    .frame{padding-top:72%}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <p class="eyebrow">Power BI · FAOSTAT API · 2010–2024</p>
+    <h1>The World of <em>Coffee</em></h1>
+    <p class="sub">
+      Where coffee is grown, who ships it, and what a kilogram is worth at the border —
+      an interactive report built on live FAOSTAT data, pulled through the REST API rather
+      than a spreadsheet.
+    </p>
+    <p class="byline">
+      Mariann Matyóka · <a href="https://www.linkedin.com/in/mmariann/" rel="noopener">LinkedIn</a>
+    </p>
+  </div>
+</header>
+
+<section class="embed-section">
+  <div class="wrap">
+    <div class="embed-head">
+      <h2>Explore the report</h2>
+      <p class="hint">Click through the pages, hover the visuals, use the slicers. Best viewed on a wide screen.</p>
+    </div>
+
+    <div class="frame">
+      <!-- ===================================================================
+           REPLACE THE src BELOW with the URL from Power BI:
+           Power BI Service → open the report → File → Embed report
+           → Publish to web (public) → copy the "Link you can send in email"
+           It looks like:  https://app.powerbi.com/view?r=eyJrIjoi....
+           Keep everything else as it is.
+           =================================================================== -->
+      <iframe
+        title="The World of Coffee — Power BI report"
+        src="https://app.powerbi.com/view?r=eyJrIjoiZjBlNDFjYTItYTNhMS00NWEzLTkzMWEtZmViOGI3MzQ3OGRmIiwidCI6ImZhNWJmMzZjLTEzM2ItNDM1ZC05YjUzLTJkZGI4ZGUxODJjOCIsImMiOjl9"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+      <noscript>
+        <div class="fallback">
+          <strong>This report needs JavaScript.</strong>
+          <span>Open it directly in Power BI instead.</span>
+        </div>
+      </noscript>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-main" href="https://app.powerbi.com/view?r=eyJrIjoiZjBlNDFjYTItYTNhMS00NWEzLTkzMWEtZmViOGI3MzQ3OGRmIiwidCI6ImZhNWJmMzZjLTEzM2ItNDM1ZC05YjUzLTJkZGI4ZGUxODJjOCIsImMiOjl9" target="_blank" rel="noopener">Open full screen ↗</a>
+      <a class="btn btn-ghost" href="https://github.com/mankadata/PBIX-portfolio" rel="noopener">Read the build notes on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<section class="notes">
+  <div class="wrap">
+    <div class="cards">
+      <div class="card">
+        <h3>Data</h3>
+        <p>FAOSTAT <strong>QCL</strong> (production) and <strong>TCL</strong> (trade) domains, item code <strong>656 — coffee, green</strong>, pulled live through the FAOSTAT REST API with token authentication.</p>
+      </div>
+      <div class="card">
+        <h3>Modelling</h3>
+        <p>Parameterised Power Query functions, a dedicated <strong>_Measures</strong> table, and DAX written in the <strong>DAX query view</strong> with inline comments.</p>
+      </div>
+      <div class="card">
+        <h3>Visuals</h3>
+        <p>Custom <strong>HTML and SVG visuals generated inside DAX measures</strong> — the waffle grid, the KPI row and the ranking cards are all hand-built.</p>
+      </div>
+      <div class="card">
+        <h3>A bug worth mentioning</h3>
+        <p>FAOSTAT returns aggregate rows (<em>World</em>, <em>Africa</em>, <em>European Union&nbsp;(27)</em>) alongside countries. Left in, every total runs <strong>4–7× too high</strong>. They are filtered out in Power Query.</p>
+      </div>
+    </div>
+
+    <div class="colophon">
+      <p>
+        The report takes its starting point from Gus Bavia's MIT-licensed
+        <em>The World of Peaches</em>, winner of the 2026 Power BI World Championship.
+        The subject, the data pipeline, the measures, the layout and the visual design here are my own.
+      </p>
+      <p>
+        Published as a read-only public embed — the underlying <code>.pbix</code> file is not available for download.
+      </p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

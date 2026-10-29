@@ -1,8 +1,22 @@
 # The World of Coffee — Power BI report
 
-A Power BI report built on FAOSTAT data. It shows where coffee is grown, where it is traded, and where the money in the chain ends up.
+## Why I built this
 
-#### ▶ [Open the live report](https://mankadata.github.io/PBIX-portfolio/)
+I have been working with Power BI and with data for years. This project is an experiment. I wanted a pet portfolio that shows what I can do, but not one built from the usual BI elements and native visuals.
+Many people can use Power BI at a basic level today. I wanted to show something that goes beyond drag-and-drop work.
+
+If you work with it for years, sooner or later you notice that it has limits, and in real projects you have to do something about them. I have run into small gaps like this many times.
+The native charts are good, and they get better with every update. However, gaps still exist, and they can stay with us for years. The Gantt chart is a good example. For a long time there was no native Gantt visual in Power BI, so anyone who needed one had to find an alternative. I watched countless videos from people in the field, showing how they work around the problem and what solutions they come up with. (October 2026.)
+
+I think this is exactly where a hand-built visual starts to make sense: at the limits.
+So I asked myself. What if I use almost only hand-built visuals in this pet project? How far could I get that way? I wanted to see how far I could go with DAX as a vizualisation tool.
+Of course, you can download more visuals from AppSource. Still, I have to admit that I was not always happy with those either. And in some cases I would have had to pay a subscription just to get a chart without a watermark. 
+And what if the company policy does not allow downloading them in the first place? Or what if I want to build the report according to the International Business Communication Standards (IBCS)? 
+Which native charts can an HTML visual really replace?
+
+
+A Power BI report built on FAOSTAT data. It shows where coffee is grown, where it is traded, and where the money in the chain ends up.
+### ▶ [Open the live report](https://mankadata.github.io/PBIX-portfolio/)
 
 Interactive — click through the pages, hover the visuals, use the slicers. No download and no Power BI licence needed.
 
@@ -14,17 +28,6 @@ Interactive — click through the pages, hover the visuals, use the slicers. No 
 
 <img width="1039" height="585" alt="image" src="https://github.com/user-attachments/assets/17701a0b-b6ca-44d6-9eeb-3a9ca95f4014" />
 
----
-
-## Why I built this
-
-I have worked with Power BI for five years. This is a pet project, not client work. I built it to widen my own skill set, to add something to what I already know how to do.
-
-Concretely, I wanted to go past the point where drag-and-drop runs out, and see what is under it. How far can you push DAX as a drawing language? How much design control do you really have inside Power BI? And just as important: where does this approach stop being a good idea?
-
-The visuals on the Production and Trade pages are HTML and SVG, generated in DAX. The map is a native visual. That split was a choice, and the rest of this README explains it.
-
----
 
 ## The data
 
@@ -54,6 +57,8 @@ People often say that HTML dashboards bring back all the problems a BI platform 
 
 ---
 
+
+---
 ## What HTML visuals do not solve
 
 Custom HTML visuals are popular right now, and the screenshots look great. People talk much less about the limits. Here they are, because they apply to this report too, and I knew about them when I started.

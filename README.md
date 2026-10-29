@@ -14,17 +14,19 @@ Of course, you can download more visuals from AppSource. Still, I have to admit 
 And what if the company policy does not allow downloading them in the first place? Or what if I want to build the report according to the International Business Communication Standards (IBCS)? 
 Which native charts can an HTML visual really replace?
 
-
+---
 A Power BI report built on FAOSTAT data. It shows where coffee is grown, where it is traded, and where the money in the chain ends up.
 ### ▶ [Open the live report](https://mankadata.github.io/PBIX-portfolio/)
 
-Interactive — click through the pages, hover the visuals, use the slicers. No download and no Power BI licence needed.
+Interactive. Click through the pages, hover the visuals, use the slicers. No download and no Power BI licence needed.
 
 <!-- Optional, once you have a screenshot:
 ![The World of Coffee — cover](docs/screenshots/cover.png)
 -->
 
 <img width="1044" height="583" alt="image" src="https://github.com/user-attachments/assets/c4e2770f-b781-43f2-8fa6-6f2ae3d8d61f" />
+
+---
 
 <img width="1039" height="585" alt="image" src="https://github.com/user-attachments/assets/17701a0b-b6ca-44d6-9eeb-3a9ca95f4014" />
 

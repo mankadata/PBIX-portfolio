@@ -8,11 +8,8 @@ Many people can use Power BI at a basic level today. I wanted to show something 
 If you work with it for years, sooner or later you notice that it has limits, and in real projects you have to do something about them. I have run into small gaps like this many times.
 The native charts are good, and they get better with every update. However, gaps still exist, and they can stay with us for years. The Gantt chart is a good example. For a long time there was no native Gantt visual in Power BI, so anyone who needed one had to find an alternative. I watched countless videos from people in the field, showing how they work around the problem and what solutions they come up with. (October 2026.)
 
-I think this is exactly where a hand-built visual starts to make sense: at the limits.
-So I asked myself. What if I use almost only hand-built visuals in this pet project? How far could I get that way? I wanted to see how far I could go with DAX as a vizualisation tool.
-Of course, you can download more visuals from AppSource. Still, I have to admit that I was not always happy with those either. And in some cases I would have had to pay a subscription just to get a chart without a watermark. 
-And what if the company policy does not allow downloading them in the first place? Or what if I want to build the report according to the International Business Communication Standards (IBCS)? 
-Which native charts can an HTML visual really replace?
+I think this is exactly where a hand-built visual starts to make sense: at the limits. 
+So I asked myself. What if I use almost only hand-built visuals in this pet project? I wanted to see how far I could go with DAX as a vizualisation tool. Of course, you can download more visuals from AppSource. Still, I have to admit that I was not always happy with those either. And in some cases I would have had to pay a subscription just to get a chart without a watermark. And what if the company policy does not allow downloading them? Or what if I want to build the report according to the International Business Communication Standards (IBCS)? Which native charts can an HTML visual really replace?
 
 ---
 A Power BI report built on FAOSTAT data. It shows where coffee is grown, where it is traded, and where the money in the chain ends up.
@@ -43,23 +40,27 @@ Interactive. Click through the pages, hover the visuals, use the slicers. No dow
 
 ---
 
-## What is still Power BI
+**Data loading** The data comes from the FAOSTAT REST API, not from an Excel file or a folder of CSVs. It is called from Power Query, and the logic is split into four parts. Config is a record that holds the endpoint, the item code and the year range in one place. If I want to point the report at a different items or a different period, there is only one place to touch. fnLogin exchanges an email and a password for a bearer token. Auth runs it once. fnFAOSTAT takes a domain and a list of element codes, and returns a typed table.
+The token expires after 60 minutes, and the API has no separate refresh endpoint. So fnFAOSTAT checks the status code of the response: if it gets a 401, it logs in again and repeats the call once. 
 
-People often say that HTML dashboards bring back all the problems a BI platform solves: data modelling, access, security, governance, refresh, distribution. That is true when the HTML file is the product. It is not true here, because the HTML is only the last drawing step.
+**Semantic model** Two fact tables, **Production and Trade**, share the **Countries and Year dimensions**, and there are a few disconnected tables for the field parameters. The dimensions, however, come straight out of the API response, not from a maintained data warehouse.
+The measures live in a _Measures table. I wrote them in **DAX query view**, with comments, so they can be read and reviewed like code.
 
-**Data loading.** The data comes from the FAOSTAT REST API, called from Power Query. A `Config` record holds the endpoint, the item code, the year range and the excluded aggregates in one place; `fnLogin` exchanges credentials for a bearer token; `fnFAOSTAT` takes a domain and a list of element codes and returns a typed table. Credentials are never committed to this repository.
+[^note]:...
 
-**Semantic model.** A star schema: two fact tables (Production, Trade) with shared Countries and Year dimensions, plus disconnected slicer tables for the field parameters. Measures live in a `_Measures` table and are written in **DAX query view**, with comments, so they can be read and reviewed as code.
+**Security and access** Workspace permissions and row-level security work the same way as in any other report: the HTML does not go around them. I did not set up row-level security in this project, because the data is public and there is no group of users I would need to separate from another. The point is that if it were needed, the HTML would not stand in the way.
 
-**Security and access.** Workspace permissions and row-level security work the same way as in any other report. The HTML does not go around them.
+**Publishing and refresh** The report is published to the Power BI Service. FAOSTAT tokens expire after 60 minutes, so a token cannot simply be stored — the solution is the re-login described above. The published version uses imported data.
 
-**Publishing and refresh.** The report is published to the Power BI Service. FAOSTAT access tokens expire after 60 minutes, which rules out caching one in a parameter — so `fnFAOSTAT` calls `fnLogin` itself and gets a fresh token on every run. Scheduled refresh works. The published version uses imported data.
-
-**Theming.** A custom theme JSON controls all native visuals. The HTML visuals keep their own colour constants, and I keep them in sync by hand — which is exactly the maintenance cost I describe in the next section.
+**Theming** A custom theme JSON controls all the native visuals. The HTML visuals, on the other hand, have their own colour constants, and I keep the two in sync by hand. This is exactly the maintenance cost the next section is about.
 
 ---
 
+## Layers legyen a cím szerintem, behind the HMTL vizuals
 
+Mostanában sok poszt jelenik meg arról, hogy mennyire könnyű lett full HTML-dashboardot készíteni AI segítségével, és hogy ez talán a BI jövője, esetleg a Power BI kiváltója. És bevallom, szerintem is könnyebb lett: ma már nem kell mélyen érteni a HTML-hez, a CSS-hez vagy a JavaScripthez ahhoz, hogy látványos vizualizáció szülessen. (a hibákat, bugokat viszont észre kell venni, és jól kell promtolni, hogy azt kapjuk vissza amit szeretnénk, de ez egy más kérdés)
+Azonban ami a képernyőn látszik, az a jéghegy csúcsa: modern design, kártyák, a színek. 
+Ami nem látszik: az adatmodell, a hozzáférés-kezelés, a biztonság, a governance, a frissítés, na meg a karbantartás. Sőt mitöbb ezek teszik ki a munkánk és a power BI kardinális részét. 
 ---
 ## What HTML visuals do not solve
 

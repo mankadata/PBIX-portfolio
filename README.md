@@ -1,15 +1,19 @@
-# The World of Coffee — Power BI report
+# The World of Coffee 
+## Power BI report
 
-## Why I built this
+### Why I built this
 
 I have been working with Power BI and with data for years. This project is an experiment. I wanted a pet portfolio that shows what I can do, but not one built from the usual BI elements and native visuals.
-Many people can use Power BI at a basic level today. I wanted to show something that goes beyond drag-and-drop work.
+I wanted to show something that goes beyond drag-and-drop work.
 
 If you work with it for years, sooner or later you notice that it has limits, and in real projects you have to do something about them. I have run into small gaps like this many times.
-The native charts are good, and they get better with every update. However, gaps still exist, and they can stay with us for years. The Gantt chart is a good example. For a long time there was no native Gantt visual in Power BI, so anyone who needed one had to find an alternative. I watched countless videos from people in the field, showing how they work around the problem and what solutions they come up with. (October 2026.)
+The native charts are good, and they get better with every update. The Gantt chart is a good example. For a long time there was no native Gantt visual in Power BI, so anyone who needed one had to find an alternative. I watched countless videos from people in the field, showing how they work around the problem and what solutions they come up with. (October 2026.)
 
 I think this is exactly where a hand-built visual starts to make sense: at the limits. 
-So I asked myself. What if I use almost only hand-built visuals in this pet project? I wanted to see how far I could go with DAX as a vizualisation tool. Of course, you can download more visuals from AppSource. Still, I have to admit that I was not always happy with those either. And in some cases I would have had to pay a subscription just to get a chart without a watermark. And what if the company policy does not allow downloading them? Or what if I want to build the report according to the International Business Communication Standards (IBCS)? Which native charts can an HTML visual really replace?
+So I asked myself. What if I use almost only hand-built visuals in this pet project? I wanted to see how far I could go with DAX as a vizualisation tool. Of course, you can download more visuals from AppSource. 
+*(Still, I have to admit that I was not always happy with those either. And in some cases I would have had to pay a subscription just to get a chart without a watermark.)* 
+And what if the company policy does not allow downloading them? 
+Or what if I want to build the report according to the International Business Communication Standards (IBCS)? Which native charts can an HTML visual really replace?
 
 ---
 A Power BI report built on FAOSTAT data. It shows where coffee is grown, where it is traded, and where the money in the chain ends up.
@@ -28,11 +32,11 @@ Interactive. Click through the pages, hover the visuals, use the slicers. No dow
 <img width="1039" height="585" alt="image" src="https://github.com/user-attachments/assets/17701a0b-b6ca-44d6-9eeb-3a9ca95f4014" />
 
 
-## The data
+### The data
 
 | | |
 |---|---|
-| **Source** | [FAOSTAT](https://www.fao.org/faostat/) REST API — `faostatservices.fao.org/api/v1` |
+| **Source** | [FAOSTAT](https://www.fao.org/faostat/) REST API — `faostatservices.fao.org/api/` |
 | **Domains** | `QCL` (crops and livestock production), `TCL` (crops and livestock trade) |
 | **Item** | FAO item code `656` — coffee, green |
 | **Period** | 2010–2024 |
@@ -40,7 +44,10 @@ Interactive. Click through the pages, hover the visuals, use the slicers. No dow
 
 ---
 
-**Data loading** The data comes from the FAOSTAT REST API, not from an Excel file or a folder of CSVs. It is called from Power Query, and the logic is split into four parts. Config is a record that holds the endpoint, the item code and the year range in one place. If I want to point the report at a different items or a different period, there is only one place to touch. fnLogin exchanges an email and a password for a bearer token. Auth runs it once. fnFAOSTAT takes a domain and a list of element codes, and returns a typed table.
+**Data loading** The data comes from the FAOSTAT REST API, not from an Excel file or a folder of CSVs. It is called from Power Query, and the logic is split into four parts. 
+- Config is a record that holds the endpoint, the item code and the year range in one place. If I want to point the report at a different items or a different period, there is only one place to touch. 
+- fnLogin exchanges an email and a password for a bearer token. 
+- Auth runs it once. fnFAOSTAT takes a domain and a list of element codes, and returns a typed table.
 The token expires after 60 minutes, and the API has no separate refresh endpoint. So fnFAOSTAT checks the status code of the response: if it gets a 401, it logs in again and repeats the call once. 
 
 **Semantic model** Two fact tables, **Production and Trade**, share the **Countries and Year dimensions**, and there are a few disconnected tables for the field parameters. The dimensions, however, come straight out of the API response, not from a maintained data warehouse.
@@ -62,7 +69,7 @@ Exactly which dbt layer maps to which medallion level varies a little from team 
 
 ---
 
-## Layers behind the HTML dashboard
+### Layers behind the HTML dashboard
 
 There are a lot of posts these days about how easy it has become to build a full HTML dashboard with AI, and how this might be the future of BI. And it is true: you no longer need a deep understanding of HTML, CSS or JavaScript to produce a good-looking visual. (You do have to write a good prompt to get back what you actually wanted. But that is another question.)
 
@@ -72,7 +79,7 @@ What you see on the screen is the top of the iceberg: the modern design, the car
 
 ---
 
-## What HTML visuals do not solve
+### What HTML visuals do not solve
 
 Custom HTML visuals are popular right now, and the screenshots look great. People talk much less about the limits. Here they are, because they apply to this report too, and I knew about them when I started.
 
@@ -93,7 +100,7 @@ An administrator can also allow certified visuals only, or turn off custom visua
 
 ---
 
-## Why there is no .pbix here
+### Why there is no .pbix here
 
 The report is published as a read-only public embed. The visuals, the measures and the layout are the work. I am happy for people to look at all of it, but not to copy it wholesale.
 

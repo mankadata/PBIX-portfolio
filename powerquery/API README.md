@@ -27,9 +27,9 @@ Password = "<**** password>",
 
 ### Three things worth knowing
 
-**The token expires after 60 minutes, and the API has no refresh endpoint.** `fnFAOSTAT` checks the status code of the response: a 401 means log in again and retry once. <\b>
-**The first argument of `Web.Contents` has to be a literal string.** The variable part of the path goes into `RelativePath`. Build the whole URL by concatenation instead, and the Power BI Service classifies it as a dynamic data source and refuses to schedule a refresh. <\b>
-**Numbers are parsed with the `"en-US"` culture.** On a machine with a European locale, the decimal point in the response would otherwise be read as a thousands separator — and a yield of 0.90 t/ha would quietly become 90. <\b>
+**The token expires after 60 minutes, and the API has no refresh endpoint.** `fnFAOSTAT` checks the status code of the response: a 401 means log in again and retry once. <br>
+**The first argument of `Web.Contents` has to be a literal string.** The variable part of the path goes into `RelativePath`. Build the whole URL by concatenation instead, and the Power BI Service classifies it as a dynamic data source and refuses to schedule a refresh. <br>
+**Numbers are parsed with the `"en-US"` culture.** On a machine with a European locale, the decimal point in the response would otherwise be read as a thousands separator — and a yield of 0.90 t/ha would quietly become 90. <br>
 
 ### How to use these in Power BI Desktop
 

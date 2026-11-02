@@ -47,9 +47,15 @@ The token expires after 60 minutes, and the API has no separate refresh endpoint
 The measures live in a _Measures table. I wrote them in **DAX query view**, with comments, so they can be read and reviewed like code.
 
 > *In Kimball's dimensional modelling, fact tables hold events and measurements, many rows, mostly numeric values, while dimension tables hold the descriptive attributes we filter and group by. Microsoft's own guidance recommends this as the default modelling approach for Power BI.
-    In a prod environment this layer would not be built inside the report. There, the medallion architecture is the usual pattern, and its point is that data does not travel through one big transformation but through clearly separated stations. Raw files land in the landing layer. Bronze holds raw data in a consistent format, silver holds cleaned and typed data, and gold holds the aggregated, report-ready model.
-    In dbt the same idea appears as staging, intermediate and mart. Staging only cleans, renames and types, with no business logic, and stays one-to-one with the source tables. Intermediate joins the sources and brings in the business rules — this is where an order meets its customer and its product. Mart is the report-ready layer: dimension and fact tables, usually materialised as physical tables, often named with `dim_` and `fct_` prefixes. Exactly which dbt layer maps to which medallion level varies a little from team to team, but the logic is the same everywhere.
-    For a pet project built around visuals, setting all of this up would be overkill. The difference is still worth seeing.*
+
+> In a prod environment this layer would not be built inside the report. There, the medallion architecture is the usual pattern, and its point is that data does not travel through one big transformation but through clearly separated stations. Raw files land in the landing layer. Bronze holds raw data in a consistent format, silver holds cleaned and typed data, and gold holds the aggregated, report-ready model.
+
+> In dbt the same idea appears as staging, intermediate and mart.
+Staging only cleans, renames and types, with no business logic, and stays one-to-one with the source tables.
+Intermediate joins the sources and brings in the business rules. This is where an order meets its customer and its product.
+Mart is the report-ready layer: dimension and fact tables, usually materialised as physical tables, often named with `dim_` and `fct_` prefixes.
+
+> Exactly which dbt layer maps to which medallion level varies a little from team to team, but the logic is the same everywhere. For a pet project built around visuals, setting all of this up would be overkill. The difference is still worth seeing.*
 
 **Security and access** Workspace permissions and row-level security work the same way as in any other report: the HTML does not go around them. I did not set up row-level security in this project, because the data is public and there is no group of users I would need to separate from another. The point is that if it were needed, the HTML would not stand in the way.
 

@@ -91,11 +91,11 @@ Licensing is a separate question again: a visual can be certified and still be p
 
 All of this is worth checking before you start.
 
-**Someone has to maintain it later.** There is no formatting pane and no theme support. Changing the accent colour in this report meant replacing **77 distinct hex values across 234 occurrences** in the measures. The next person who opens this file needs to read several hundred lines of CSS and SVG inside DAX text — not just write measures, but read them, in DAX query view.
+**Someone has to maintain it, and that means documenting it.** There is no formatting pane. With a native visual the settings are visible to anyone who opens it; with a visual drawn in DAX, nothing is visible anywhere. The next person who opens this file has to read several hundred lines of HTML, CSS and SVG inside DAX text, so I wrote comments throughout. That person also has to be an advanced DAX reader and a BI developer at the same time. If the work is ever going to be handed over, it has to be documented well — and AI can help with that part, which I think is a fair use of it.
 
-**You have to document it.** The drawing logic is invisible in the Power BI interface, so the code must explain itself. I used AI help for part of that documentation. I think that is a fair use of it: it writes the explanation around code where I made the decisions.
+<sub>Documentation matters everywhere, not only here. I once took over a report that did not contain a single line of HTML, and it still felt like forever before I understood what was happening in it, and why it had been built that way. There was nothing written down, not even the stakeholder requests. Documentation is not an extra, it is a basic condition.</sub>
 
-**Performance and debugging.** Every HTML visual is an iframe with its own render cycle. There is no developer console. If a text concatenation breaks, you get an empty box, not an error message.
+**Performance and debugging.** If a text concatenation breaks, you get an empty box, not an error message.
 
 ---
 

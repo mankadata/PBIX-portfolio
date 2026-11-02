@@ -52,7 +52,7 @@ In dbt the same idea appears as staging, intermediate and mart.
 Staging only cleans, renames and types, with no business logic, and stays one-to-one with the source tables.
 Intermediate joins the sources and brings in the business rules. This is where an order meets its customer and its product.
 Mart is the report-ready layer: dimension and fact tables, usually materialised as physical tables, often named with `dim_` and `fct_` prefixes.
-Exactly which dbt layer maps to which medallion level varies a little from team to team, but the logic is the same everywhere. For a pet project built around visuals, setting all of this up would be overkill. The difference is still worth seeing.* </sub>
+Exactly which dbt layer maps to which medallion level varies a little from team to team, but the logic is the same everywhere. For a pet project built around visuals, setting all of this up would be overkill. The difference is still worth seeing. </sub>
 
 **Security and access** Workspace permissions and row-level security work the same way as in any other report: the HTML does not go around them. I did not set up row-level security in this project, because the data is public and there is no group of users I would need to separate from another. The point is that if it were needed, the HTML would not stand in the way.
 
@@ -81,19 +81,13 @@ Custom HTML visuals are popular right now, and the screenshots look great. Peopl
 **Accessibility is almost completely missing.** Screen readers cannot read inside the visual’s iframe, and you cannot move through it with the keyboard. 
 The alt text measures in this model help a little, but they do not fix it. In the public sector, or in a regulated company, this alone can stop the whole idea.
 
-**Certification, export and subscriptions.** A visual that renders HTML cannot be certified in AppSource. Certification requires that a visual does not write unsanitised input into the DOM and does not call external services, which is the opposite of what an HTML visual is for. 
-
-Certification is what makes export to PowerPoint work, and what lets a visual appear in the images sent with email subscriptions. Neither of those works here.
-
-On top of that, an administrator can allow certified visuals only, or switch off SDK visuals completely, and then the report does not run at all. 
-
-Licensing is a separate question again: a visual can be certified and still be paid, or put a watermark on its free version. 
-
-All of this is worth checking before you start.
+**Certification, export and subscriptions.** A visual that draws HTML cannot be certified in AppSource. To be certified, a visual must not write raw input into the page, and must not call out to the internet. That is exactly what an HTML visual does.
+Certification is what makes two things work: export to PowerPoint, and the image that goes out with an email subscription. Neither works here.
+An administrator can also allow certified visuals only, or turn off custom visuals completely. Then the report does not run at all.
 
 **Someone has to maintain it, and that means documenting it.** There is no formatting pane. With a native visual the settings are visible to anyone who opens it; with a visual drawn in DAX, nothing is visible anywhere. The next person who opens this file has to read several hundred lines of HTML, CSS and SVG inside DAX text, so I wrote comments throughout. That person also has to be an advanced DAX reader and a BI developer at the same time. If the work is ever going to be handed over, it has to be documented well — and AI can help with that part, which I think is a fair use of it.
 
-<sub>Documentation matters everywhere, not only here. I once took over a report that did not contain a single line of HTML, and it still felt like forever before I understood what was happening in it, and why it had been built that way. There was nothing written down, not even the stakeholder requests. Documentation is not an extra, it is a basic condition.</sub>
+> <sub> Documentation matters everywhere, not only here. I once took over a report that did not contain a single line of HTML, and it still felt like forever before I understood what was happening in it, and why it had been built that way. There was nothing written down, not even the stakeholder requests. Documentation is not an extra, it is a basic condition.</sub>
 
 **Performance and debugging.** If a text concatenation breaks, you get an empty box, not an error message.
 

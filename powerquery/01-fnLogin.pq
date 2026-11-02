@@ -2,24 +2,15 @@
 //  fnLogin
 //  ---------------------------------------------------------------------
 //  Exchanges an email and a password for a bearer token.
+//  The token is valid for 60 minutes and there is no refresh endpoint, so fnFAOSTAT calls this function again whenever it gets a 401.
 //
-//  The FAOSTAT login endpoint takes a form-urlencoded POST body and
-//  answers with an AuthenticationResult record. The token is valid for
-//  60 minutes and there is no refresh endpoint, so fnFAOSTAT calls this
-//  function again whenever it gets a 401.
-//
-//  CREDENTIALS
-//  The two values below are placeholders. Fill them in locally and do
-//  not commit the real ones. Use an account created only for this API,
-//  with a password you do not use anywhere else: anything written here
-//  is stored inside the .pbix file.
 // =====================================================================
 
 let
     Login = () as record =>
     let
-        Email    = "<your-faostat-email>",
-        Password = "<your-faostat-password>",
+        Email    = "<email>",
+        Password = "<***** password>",
 
         Endpoint = "https://faostatservices.fao.org/api/v1/auth/login",
 

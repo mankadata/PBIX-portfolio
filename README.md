@@ -46,7 +46,10 @@ The token expires after 60 minutes, and the API has no separate refresh endpoint
 **Semantic model** Two fact tables, **Production and Trade**, share the **Countries and Year dimensions**, and there are a few disconnected tables for the field parameters. The dimensions, however, come straight out of the API response, not from a maintained data warehouse.
 The measures live in a _Measures table. I wrote them in **DAX query view**, with comments, so they can be read and reviewed like code.
 
-[^note]:...
+[^1]: In Kimball's dimensional modelling, fact tables hold events and measurements, many rows, mostly numeric values, while dimension tables hold the descriptive attributes we filter and group by. Microsoft's own guidance recommends this as the default modelling approach for Power BI.
+    In a prod environment this layer would not be built inside the report. There, the medallion architecture is the usual pattern, and its point is that data does not travel through one big transformation but through clearly separated stations. Raw files land in the landing layer. Bronze holds raw data in a consistent format, silver holds cleaned and typed data, and gold holds the aggregated, report-ready model.
+    In dbt the same idea appears as staging, intermediate and mart. Staging only cleans, renames and types, with no business logic, and stays one-to-one with the source tables. Intermediate joins the sources and brings in the business rules — this is where an order meets its customer and its product. Mart is the report-ready layer: dimension and fact tables, usually materialised as physical tables, often named with `dim_` and `fct_` prefixes. Exactly which dbt layer maps to which medallion level varies a little from team to team, but the logic is the same everywhere.
+    For a pet project built around visuals, setting all of this up would be overkill. The difference is still worth seeing. 
 
 **Security and access** Workspace permissions and row-level security work the same way as in any other report: the HTML does not go around them. I did not set up row-level security in this project, because the data is public and there is no group of users I would need to separate from another. The point is that if it were needed, the HTML would not stand in the way.
 
@@ -56,21 +59,34 @@ The measures live in a _Measures table. I wrote them in **DAX query view**, with
 
 ---
 
-## Layers legyen a cím szerintem, behind the HMTL vizuals
+## Layers behind the HTML dashboard
 
-Mostanában sok poszt jelenik meg arról, hogy mennyire könnyű lett full HTML-dashboardot készíteni AI segítségével, és hogy ez talán a BI jövője, esetleg a Power BI kiváltója. És bevallom, szerintem is könnyebb lett: ma már nem kell mélyen érteni a HTML-hez, a CSS-hez vagy a JavaScripthez ahhoz, hogy látványos vizualizáció szülessen. (a hibákat, bugokat viszont észre kell venni, és jól kell promtolni, hogy azt kapjuk vissza amit szeretnénk, de ez egy más kérdés)
-Azonban ami a képernyőn látszik, az a jéghegy csúcsa: modern design, kártyák, a színek. 
-Ami nem látszik: az adatmodell, a hozzáférés-kezelés, a biztonság, a governance, a frissítés, na meg a karbantartás. Sőt mitöbb ezek teszik ki a munkánk és a power BI kardinális részét. 
+There are a lot of posts these days about how easy it has become to build a full HTML dashboard with AI, and how this might be the future of BI. And it is true: you no longer need a deep understanding of HTML, CSS or JavaScript to produce a good-looking visual. (You do have to write a good prompt to get back what you actually wanted. But that is another question.)
+
+My problem with a full HTML dashboard is not how it looks. It is that you cannot see what sits behind it.
+
+What you see on the screen is the top of the iceberg: the modern design, the cards, the colours. What you do not see is the data model, access management, security, governance, refresh and maintenance. Those layers are the larger part of our work, and the larger part of Power BI itself. The job is not only beautiful charts.
+
 ---
+
 ## What HTML visuals do not solve
 
 Custom HTML visuals are popular right now, and the screenshots look great. People talk much less about the limits. Here they are, because they apply to this report too, and I knew about them when I started.
 
-**They cannot filter the report back.** An HTML visual gets filters, but it cannot send one. If you click a bar in the waffle chart, nothing else on the page changes. The more of the page you give to HTML, the less the report works as a tool you can explore, and the more it becomes a poster. This is the strongest argument against the approach. It is also why the map here stayed native.
+**They cannot filter the report back.** An HTML visual gets filters, but it cannot send one. If you click a bar in the waffle chart, nothing else on the page changes. The more of the page you give to HTML, the less the report works as a tool you can explore, and the more it becomes a poster. This is the strongest argument against the approach.
 
-**Accessibility is basically missing.** Screen readers cannot read inside the visual's iframe, and you cannot move through it with the keyboard. The alt text measures in this model help a little, but they do not fix it. In the public sector or in regulated companies this alone can block the whole idea.
+**Accessibility is almost completely missing.** Screen readers cannot read inside the visual’s iframe, and you cannot move through it with the keyboard. 
+The alt text measures in this model help a little, but they do not fix it. In the public sector, or in a regulated company, this alone can stop the whole idea.
 
-**Certification, export and subscriptions.** Many HTML content visuals are not certified in AppSource. Without certification, PDF export, email subscriptions and server-side rendering stop working, and some companies block these visuals completely. Worth checking before you start.
+**Certification, export and subscriptions.** A visual that renders HTML cannot be certified in AppSource. Certification requires that a visual does not write unsanitised input into the DOM and does not call external services, which is the opposite of what an HTML visual is for. 
+
+Certification is what makes export to PowerPoint work, and what lets a visual appear in the images sent with email subscriptions. Neither of those works here.
+
+On top of that, an administrator can allow certified visuals only, or switch off SDK visuals completely, and then the report does not run at all. 
+
+Licensing is a separate question again: a visual can be certified and still be paid, or put a watermark on its free version. 
+
+All of this is worth checking before you start.
 
 **Someone has to maintain it later.** There is no formatting pane and no theme support. Changing the accent colour in this report meant replacing **77 distinct hex values across 234 occurrences** in the measures. The next person who opens this file needs to read several hundred lines of CSS and SVG inside DAX text — not just write measures, but read them, in DAX query view.
 

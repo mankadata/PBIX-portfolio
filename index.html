@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The World of Coffee — Power BI Report</title>
 <meta name="description" content="An interactive Power BI report on global coffee production and trade, built on live FAOSTAT API data.">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="googlebot" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -115,33 +117,60 @@
   }
   .btn-main{background:var(--roast);color:var(--cream);border:1px solid var(--roast)}
   .btn-main:hover{background:var(--ink)}
-  .btn-ghost{background:transparent;color:var(--roast);border:1px solid rgba(74,51,42,0.3)}
-  .btn-ghost:hover{border-color:var(--roast);background:rgba(74,51,42,0.06)}
 
-  /* ---------- notes ---------- */
-  .notes{padding:52px 0 72px}
+  /* ---------- build notes ---------- */
+  .notes{padding:52px 0 0}
+  .section-head{
+    font-family:Lora,Georgia,serif;font-size:26px;font-weight:600;
+    margin:0 0 10px;
+  }
+  .lede{
+    max-width:70ch;font-size:15px;color:var(--ink-soft);margin:0 0 30px;
+  }
   .cards{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(248px,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
     gap:18px;
-    margin:0 0 40px;
+    margin:0 0 56px;
+    align-items:start;
   }
   .card{
     background:var(--cream);
     border:1px solid var(--line);
     border-radius:12px;
-    padding:22px;
+    padding:24px;
   }
   .card h3{
     font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--sage-deep);margin:0 0 10px;
+    color:var(--sage-deep);margin:0 0 12px;
   }
-  .card p{margin:0;font-size:14px;color:var(--ink-soft)}
+  .card p{margin:0 0 12px;font-size:14px;color:var(--ink-soft)}
+  .card p:last-child{margin-bottom:0}
   .card strong{color:var(--ink);font-weight:600}
+  .card code{
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:12.5px;color:var(--roast);
+    background:rgba(74,51,42,0.07);
+    padding:1px 5px;border-radius:4px;
+  }
+
+  /* ---------- limits ---------- */
+  .limits{padding:0 0 72px}
+  .limit{
+    border-left:3px solid var(--sage);
+    padding:1px 0 1px 18px;
+    margin:0 0 22px;
+    max-width:74ch;
+  }
+  .limit strong{
+    display:block;font-size:15px;font-weight:700;color:var(--ink);
+    margin:0 0 5px;
+  }
+  .limit p{margin:0;font-size:14px;color:var(--ink-soft)}
 
   .colophon{
     border-top:1px solid var(--line);
-    padding-top:26px;
+    padding-top:26px;margin-top:44px;
     font-size:13px;color:var(--ink-faint);
     max-width:72ch;
   }
@@ -152,6 +181,7 @@
     header{padding:40px 0 34px}
     .embed-section{padding:30px 0 4px}
     .frame{padding-top:72%}
+    .notes{padding-top:38px}
   }
 </style>
 </head>
@@ -196,34 +226,83 @@
     </div>
 
     <div class="actions">
-      <a class="btn btn-main" href="https://app.powerbi.com/view?r=eyJrIjoiZmY3MWE0YzAtYjM0NC00NzAwLThmNzctODAyNTUyMDU2ZjBmIiwidCI6ImZhNWJmMzZjLTEzM2ItNDM1ZC05YjUzLTJkZGI4ZGUxODJjOCIsImMiOjl9" target="_blank" rel="noopener">Open full screen ↗</a>
-      <a class="btn btn-ghost" href="https://github.com/mankadata/PBIX-portfolio" rel="noopener">Read the build notes on GitHub</a>
+      <a class="btn btn-main" href="https://github.com/mankadata/PBIX-portfolio" rel="noopener">Read the build notes on GitHub ↗</a>
     </div>
   </div>
 </section>
 
 <section class="notes">
   <div class="wrap">
+    <h2 class="section-head">How it is built</h2>
+    <p class="lede">
+      The HTML is only the last step, the drawing. Everything underneath it — the loading,
+      the model, the measures — stayed in Power BI.
+    </p>
+
     <div class="cards">
       <div class="card">
         <h3>Data</h3>
-        <p>FAOSTAT <strong>QCL</strong> (production) and <strong>TCL</strong> (trade) domains, item code <strong>656 — coffee, green</strong>, pulled live through the FAOSTAT REST API with token authentication.</p>
+        <p>The data comes from the <strong>FAOSTAT REST API</strong>, not from an Excel file or a folder of CSVs. Power Query handles it in four parts: a <code>Config</code> record holding the endpoint, the item code and the year range; <code>fnLogin</code>, which exchanges credentials for a bearer token; <code>Auth</code>, which runs it once; and <code>fnFAOSTAT</code>, which takes a domain and a list of element codes and returns a typed table.</p>
+        <p>Tokens expire after 60 minutes and the API has no refresh endpoint, so a <strong>401 triggers a fresh login and one retry</strong>.</p>
+        <p>FAOSTAT also returns aggregate rows — <em>World</em>, <em>Africa</em>, <em>European Union&nbsp;(27)</em> — alongside countries. Left in, every total runs <strong>4–7× too high</strong>. They are filtered out on load, against FAOSTAT's own country list.</p>
       </div>
+
       <div class="card">
         <h3>Modelling</h3>
-        <p>Parameterised Power Query functions, a dedicated <strong>_Measures</strong> table, and DAX written in the <strong>DAX query view</strong> with inline comments.</p>
+        <p>Two fact tables, <strong>Production</strong> and <strong>Trade</strong>, share the <strong>Countries</strong> and <strong>Year</strong> dimensions, with a few disconnected tables for the field parameters.</p>
+        <p>The measures live in a <code>_Measures</code> table, written in the <strong>DAX query view</strong> with comments, so they can be read and reviewed like code.</p>
+        <p>It is not a textbook star schema: the dimensions come straight out of the API response, not from a maintained warehouse. In a production setup this layer would not sit inside the report at all — it would live on the data platform, in the silver and gold layers of the medallion pattern.</p>
       </div>
+
       <div class="card">
         <h3>Visuals</h3>
-        <p>Custom <strong>HTML and SVG visuals generated inside DAX measures</strong> — the waffle grid, the KPI row and the ranking cards are all hand-built.</p>
+        <p>The visuals on the Production and Trade pages are <strong>HTML and SVG generated inside DAX measures</strong> — the waffle grid, the KPI row and the ranking cards are all hand-built.</p>
+        <p>The map stayed a <strong>native visual</strong> on purpose: being able to cross-filter from it matters more than how it looks.</p>
+        <p>A custom theme JSON drives every native visual. The HTML visuals carry their own colour constants, and I keep the two in sync by hand — which is the first item on the list below.</p>
       </div>
-      <div class="card">
-        <h3>A bug worth mentioning</h3>
-        <p>FAOSTAT returns aggregate rows (<em>World</em>, <em>Africa</em>, <em>European Union&nbsp;(27)</em>) alongside countries. Left in, every total runs <strong>4–7× too high</strong>. They are filtered out in Power Query.</p>
-      </div>
+    </div>
+  </div>
+</section>
+
+<section class="limits">
+  <div class="wrap">
+    <h2 class="section-head">What HTML visuals do not solve</h2>
+    <p class="lede">
+      Custom HTML visuals are popular right now, and the screenshots look great. People talk
+      much less about the limits. Here they are, because they apply to this report too, and I
+      knew about them when I started.
+    </p>
+
+    <div class="limit">
+      <strong>They cannot filter the report back.</strong>
+      <p>An HTML visual gets filters, but it cannot send one. Click a bar in the waffle chart and nothing else on the page changes. The more of the page you give to HTML, the less the report works as a tool you can explore, and the more it becomes a poster. This is the strongest argument against the approach.</p>
+    </div>
+
+    <div class="limit">
+      <strong>Accessibility is almost completely missing.</strong>
+      <p>Screen readers cannot read inside the visual's iframe, and you cannot move through it with the keyboard. The alt text measures in this model help a little, but they do not fix it. In the public sector, or in a regulated company, this alone can stop the whole idea.</p>
+    </div>
+
+    <div class="limit">
+      <strong>It cannot be certified.</strong>
+      <p>To be certified in AppSource, a visual must not write raw input into the page and must not call out to the internet — which is exactly what an HTML visual does. Without certification, export to PowerPoint and the image sent with an email subscription both stop working. An administrator can also allow certified visuals only, or switch custom visuals off completely, and then the report does not run at all.</p>
+    </div>
+
+    <div class="limit">
+      <strong>Someone has to maintain it, and that means documenting it.</strong>
+      <p>There is no formatting pane. With a native visual the settings are visible to anyone who opens it; with a visual drawn in DAX, nothing is visible anywhere. The next person who opens this file has to read several hundred lines of HTML, CSS and SVG inside DAX text, so I wrote comments throughout. That person has to be an advanced DAX reader and a BI developer at the same time.</p>
+    </div>
+
+    <div class="limit">
+      <strong>Debugging is blind.</strong>
+      <p>Every HTML visual is an iframe with its own render cycle, and there is no developer console. If a text concatenation breaks, you get an empty box, not an error message.</p>
     </div>
 
     <div class="colophon">
+      <p>
+        The longer version of all of this — the data pipeline, the modelling, and what I would
+        do differently — is in the <a href="https://github.com/mankadata/PBIX-portfolio" rel="noopener">README on GitHub</a>.
+      </p>
       <p>
         Published as a read-only public embed — the underlying <code>.pbix</code> file is not available for download.
       </p>

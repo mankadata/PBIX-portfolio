@@ -156,17 +156,44 @@
 
   /* ---------- limits ---------- */
   .limits{padding:0 0 72px}
+  .limit-list{counter-reset:limit;border-top:1px solid var(--line)}
   .limit{
-    border-left:3px solid var(--sage);
-    padding:1px 0 1px 18px;
-    margin:0 0 22px;
-    max-width:74ch;
+    display:grid;
+    grid-template-columns:minmax(170px,220px) 1fr;
+    gap:12px 36px;
+    padding:28px 0;
+    border-bottom:1px solid var(--line);
+    align-items:start;
   }
   .limit strong{
-    display:block;font-size:15px;font-weight:700;color:var(--ink);
-    margin:0 0 5px;
+    position:relative;
+    display:block;
+    font-family:Lora,Georgia,serif;
+    font-size:17px;font-weight:600;line-height:1.35;color:var(--ink);
+    padding-left:30px;
   }
-  .limit p{margin:0;font-size:14px;color:var(--ink-soft)}
+  .limit strong::before{
+    counter-increment:limit;
+    content:counter(limit,decimal-leading-zero);
+    position:absolute;left:0;top:3px;
+    font-family:Manrope,sans-serif;
+    font-size:11px;font-weight:700;letter-spacing:.06em;
+    color:var(--sage-deep);
+  }
+  .limit-body{min-width:0}
+  .limit-body p{margin:0 0 12px;font-size:14.5px;color:var(--ink-soft)}
+  .limit-body p:last-child{margin-bottom:0}
+  .limit-note{
+    margin:14px 0 0 !important;
+    padding:14px 16px;
+    background:rgba(125,143,110,0.10);
+    border-radius:8px;
+    font-size:13px;line-height:1.55;color:var(--ink-faint);
+  }
+
+  @media (max-width:720px){
+    .limit{grid-template-columns:1fr;gap:8px;padding:22px 0}
+  }
 
   .colophon{
     border-top:1px solid var(--line);
@@ -195,9 +222,11 @@
       Where coffee is grown, who ships it, and what a kilogram is worth at the border.
       This is an interactive report built on live FAOSTAT data, pulled through the REST API rather than a spreadsheet.
     </p>
-    <p class="byline">
-      Mariann M. · <a href="https://www.linkedin.com/in/mmariann/" rel="noopener">LinkedIn</a>
-    </p>
+    
+     <p>
+        Mariann M. <a href="https://www.linkedin.com/in/mmariann/" rel="noopener">LinkedIn</a>.
+      </p>
+    
   </div>
 </header>
 
@@ -241,7 +270,10 @@
     <div class="cards">
       <div class="card">
         <h3>Data</h3>
-        <p>The data comes from the <strong>FAOSTAT REST API</strong>, not from an Excel file or a folder of CSVs. Power Query handles it in four parts: a <code>Config</code> record holding the endpoint, the item code and the year range; <code>fnLogin</code>, which exchanges credentials for a bearer token; <code>Auth</code>, which runs it once; and <code>fnFAOSTAT</code>, which takes a domain and a list of element codes and returns a typed table.</p>
+        <p>The data comes from the <strong>FAOSTAT REST API</strong>, not from an Excel file or a folder of CSVs. Power Query handles it in four parts: <br> 
+          a <code>Config</code> record holding the endpoint, the item code and the year range; <br> 
+          <code>fnLogin</code>, which exchanges credentials for a bearer token; <br> 
+          <code>Auth</code>, which runs it once; and <code>fnFAOSTAT</code>, which takes a domain and a list of element codes and returns a typed table.</p>
         <p>Tokens expire after 60 minutes and the API has no refresh endpoint, so a <strong>401 triggers a fresh login and one retry</strong>.</p>
       </div>
 
@@ -249,13 +281,11 @@
         <h3>Modelling</h3>
         <p>Two fact tables, <strong>Production</strong> and <strong>Trade</strong>, share the <strong>Countries</strong> and <strong>Year</strong> dimensions, with a few disconnected tables for the field parameters.</p>
         <p>The measures live in a <code>_Measures</code> table, written in the <strong>DAX query view</strong> with comments, so they can be read and reviewed like code.</p>
-        <p>It is not a textbook star schema: the dimensions come straight out of the API response, not from a maintained warehouse. In a production setup this layer would not sit inside the report at all — it would live on the data platform, in the silver and gold layers of the medallion pattern.</p>
-      </div>
+       </div>
 
       <div class="card">
         <h3>Visuals</h3>
-        <p>The visuals on the Production and Trade pages are <strong>HTML and SVG generated inside DAX measures</strong>. The map stayed a <strong>native visual</strong> on purpose: being able to cross-filter from it matters more than how it looks.</p>
-        <p>A custom theme JSON drives every native visual. The HTML visuals carry their own colour constants, and I keep the two in sync by hand, which is the first item on the list below.</p>
+        <p>The visuals on the Production and Trade pages are <strong>HTML and SVG generated inside DAX measures</strong>. 
       </div>
     </div>
   </div>
@@ -266,39 +296,65 @@
     <h2 class="section-head">What HTML visuals do not solve</h2>
     <p class="lede">
       Custom HTML visuals are popular right now, and the screenshots look great. People talk
-      much less about the limits. Here they are, because they apply to this report too, and I
-      knew about them when I started.
+      much less about the limits. My problem with a full HTML dashboard is not how it looks —
+      it is that you cannot see what sits behind it. Here is what it does not solve, because
+      all of it applies to this report too, and I knew about it when I started.
     </p>
 
-    <div class="limit">
-      <strong>They cannot filter the report back.</strong>
-      <p>An HTML visual gets filters, but it cannot send one. Click a bar in the waffle chart and nothing else on the page changes. The more of the page you give to HTML, the less the report works as a tool you can explore, and the more it becomes a poster. This is the strongest argument against the approach.</p>
-    </div>
+    <div class="limit-list">
+      <div class="limit">
+        <strong>They cannot filter the report back.</strong>
+        <div class="limit-body">
+          <p>An HTML visual gets filters, but it cannot send one. Click a bar in the waffle chart and nothing else on the page changes. The more of the page you give to HTML, the less the report works as a tool you can explore, and the more it becomes a poster.</p>
+          <p>This is the strongest argument against the approach, and it is why the map here stayed a native visual.</p>
+        </div>
+      </div>
 
-    <div class="limit">
-      <strong>Accessibility is almost completely missing.</strong>
-      <p>Screen readers cannot read inside the visual's iframe, and you cannot move through it with the keyboard. The alt text measures in this model help a little, but they do not fix it. In the public sector, or in a regulated company, this alone can stop the whole idea.</p>
-    </div>
+      <div class="limit">
+        <strong>Accessibility is almost completely missing.</strong>
+        <div class="limit-body">
+          <p>Screen readers cannot read inside the visual's iframe, and you cannot move through it with the keyboard. The alt text measures in this model help a little, but they do not fix it. In the public sector, or in a regulated company, this alone can stop the whole idea.</p>
+        </div>
+      </div>
 
-    <div class="limit">
-      <strong>It cannot be certified.</strong>
-      <p>To be certified in AppSource, a visual must not write raw input into the page and must not call out to the internet — which is exactly what an HTML visual does. Without certification, export to PowerPoint and the image sent with an email subscription both stop working. An administrator can also allow certified visuals only, or switch custom visuals off completely, and then the report does not run at all.</p>
-    </div>
+      <div class="limit">
+        <strong>It cannot be certified.</strong>
+        <div class="limit-body">
+          <p>To be certified in AppSource, a visual must not write raw input into the page and must not call out to the internet. That is exactly what an HTML visual does.</p>
+          <p>Certification is what makes two things work: export to PowerPoint, and the image that goes out with an email subscription. Neither works here. An administrator can also allow certified visuals only, or turn custom visuals off completely — and then the report does not run at all.</p>
+        </div>
+      </div>
 
-    <div class="limit">
-      <strong>Someone has to maintain it, and that means documenting it.</strong>
-      <p>There is no formatting pane. With a native visual the settings are visible to anyone who opens it; with a visual drawn in DAX, nothing is visible anywhere. The next person who opens this file has to read several hundred lines of HTML, CSS and SVG inside DAX text, so I wrote comments throughout. That person has to be an advanced DAX reader and a BI developer at the same time.</p>
-    </div>
+      <div class="limit">
+        <strong>Buying your way out has a price of its own.</strong>
+        <div class="limit-body">
+          <p>AppSource has visuals that solve a lot of this. I was not always happy with them, and some of the good ones want a subscription before the watermark disappears. Price and certification are separate questions: a visual can be certified and still cost money.</p>
+          <p>And in a company, the decision may not be yours at all — the policy can simply forbid installing anything.</p>
+        </div>
+      </div>
 
-    <div class="limit">
-      <strong>Debugging is blind.</strong>
-      <p>Every HTML visual is an iframe with its own render cycle, and there is no developer console. If a text concatenation breaks, you get an empty box, not an error message.</p>
+      <div class="limit">
+        <strong>Someone has to maintain it, and that means documenting it.</strong>
+        <div class="limit-body">
+          <p>There is no formatting pane. With a native visual the settings are visible to anyone who opens it; with a visual drawn in DAX, nothing is visible anywhere. The next person who opens this file has to read several hundred lines of HTML, CSS and SVG inside DAX text, so I wrote comments throughout.</p>
+          <p>That person has to be an advanced DAX reader and a BI developer at the same time, which is a much narrower hire than "someone who knows Power BI". AI can help write the documentation, and I think that is a fair use of it: the decisions are mine, the AI described them.</p>
+          <p class="limit-note">Documentation matters everywhere, not only here. I once took over a report that did not contain a single line of HTML, and it still felt like forever before I understood what was happening in it, and why it had been built that way. There was nothing written down, not even the stakeholder requests — so I was missing more than the logic, I was missing the intent. Documentation is not an extra, it is a basic condition.</p>
+        </div>
+      </div>
+
+      <div class="limit">
+        <strong>Debugging is blind.</strong>
+        <div class="limit-body">
+          <p>Every HTML visual is an iframe with its own render cycle, and there is no developer console. If a text concatenation breaks, you get an empty box, not an error message.</p>
+        </div>
+      </div>
     </div>
 
     <div class="colophon">
       <p>
         The longer version of all of this is in the <a href="https://github.com/mankadata/PBIX-portfolio" rel="noopener">README on GitHub</a>.
       </p>
+   
       <p>
         Published as a read-only public embed, the <code>.pbix</code> file is not available for download.
       </p>

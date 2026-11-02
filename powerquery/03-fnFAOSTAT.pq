@@ -1,23 +1,19 @@
 // =====================================================================
 //  fnFAOSTAT
 //  ---------------------------------------------------------------------
-//  Takes a FAOSTAT domain and a list of element codes, and returns a
-//  typed table.
+//  Takes a FAOSTAT domain and a list of element codes, and returns a typed table.
 //
 //    fnFAOSTAT( "QCL", { 5510, 5312, 5412 } )   -> production
 //    fnFAOSTAT( "TCL", { 5910, 5922, 5610 } )   -> trade
 //
 //  Notes on the parts that are not obvious:
-//
 //  * The first argument of Web.Contents is a literal string, and the
 //    variable part sits in RelativePath. Build the whole URL by
 //    concatenation instead and the Power BI Service treats it as a
 //    dynamic data source, which blocks scheduled refresh.
 //
 //  * Tokens last 60 minutes and there is no refresh endpoint. So the
-//    response status is checked by hand: a 401 means log in again and
-//    retry once, a 403 and a 429 get an error message that says what
-//    actually went wrong.
+//    response status is checked by hand: a 401 means log in again.
 //
 //  * Numbers are parsed with the "en-US" culture. On a machine with a
 //    European locale the decimal point would otherwise be read as a

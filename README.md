@@ -1,6 +1,15 @@
 # The World of Coffee 
 ## Power BI report
 
+![Power BI](https://img.shields.io/badge/Power%20BI-F2C811?style=flat&logo=powerbi&logoColor=black)
+![DAX](https://img.shields.io/badge/DAX-1B1613?style=flat)
+![Power Query M](https://img.shields.io/badge/Power%20Query%20M-4A332A?style=flat)
+![REST API](https://img.shields.io/badge/REST%20API-5F7154?style=flat)
+![HTML](https://img.shields.io/badge/HTML-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS](https://img.shields.io/badge/CSS-1572B6?style=flat&logo=css3&logoColor=white)
+![SVG](https://img.shields.io/badge/SVG-7D8F6E?style=flat)
+![JSON](https://img.shields.io/badge/JSON-E4DCCB?style=flat&logoColor=black)
+
 ### Why I built this
 
 I have been working with Power BI and with data for years. This project is an experiment. I wanted a pet portfolio that shows what I can do, but not one built from the usual BI elements and native visuals.<br>

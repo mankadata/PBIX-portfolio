@@ -234,26 +234,27 @@
   <div class="wrap">
     <h2 class="section-head">How it is built</h2>
     <p class="lede">
-      The HTML is only the last step, the visualization. Everything underneath it - the loading, the model, the measures - stayed in Power BI.
+      The HTML is only the last step, the drawing. Everything underneath it — the loading,
+      the model, the measures — stayed in Power BI.
     </p>
 
-    <div class="cards"></div>
+    <div class="cards">
       <div class="card">
         <h3>Data</h3>
         <p>The data comes from the <strong>FAOSTAT REST API</strong>, not from an Excel file or a folder of CSVs. Power Query handles it in four parts: a <code>Config</code> record holding the endpoint, the item code and the year range; <code>fnLogin</code>, which exchanges credentials for a bearer token; <code>Auth</code>, which runs it once; and <code>fnFAOSTAT</code>, which takes a domain and a list of element codes and returns a typed table.</p>
-        <p>Tokens expire after 60 minutes and the API has no refresh endpoint, so a <strong>401 triggers a fresh login and one retry</strong>.</p
+        <p>Tokens expire after 60 minutes and the API has no refresh endpoint, so a <strong>401 triggers a fresh login and one retry</strong>.</p>
       </div>
 
       <div class="card">
         <h3>Modelling</h3>
         <p>Two fact tables, <strong>Production</strong> and <strong>Trade</strong>, share the <strong>Countries</strong> and <strong>Year</strong> dimensions, with a few disconnected tables for the field parameters.</p>
         <p>The measures live in a <code>_Measures</code> table, written in the <strong>DAX query view</strong> with comments, so they can be read and reviewed like code.</p>
-        <p>It is not a textbook star schema: the dimensions come straight out of the API response, not from a maintained warehouse. In a production setup this layer would not sit inside the report at all. It would live on the data platform, in the silver and gold layers of the medallion pattern.</p>
+        <p>It is not a textbook star schema: the dimensions come straight out of the API response, not from a maintained warehouse. In a production setup this layer would not sit inside the report at all — it would live on the data platform, in the silver and gold layers of the medallion pattern.</p>
       </div>
 
       <div class="card">
         <h3>Visuals</h3>
-        <p>The visuals on the Production and Trade pages are <strong>HTML and SVG generated inside DAX measures</strong>.</p>
+        <p>The visuals on the Production and Trade pages are <strong>HTML and SVG generated inside DAX measures</strong>. The map stayed a <strong>native visual</strong> on purpose: being able to cross-filter from it matters more than how it looks.</p>
         <p>A custom theme JSON drives every native visual. The HTML visuals carry their own colour constants, and I keep the two in sync by hand, which is the first item on the list below.</p>
       </div>
     </div>

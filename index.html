@@ -220,9 +220,7 @@
     <p class="eyebrow">Power BI · FAOSTAT API · 2010–2024</p>
     <h1>The World of <em>Coffee</em></h1>
     <p class="sub">
-      Where coffee is grown, who ships it, and what a kilogram is worth at the border —
-      an interactive report built on live FAOSTAT data, pulled through the REST API rather
-      than a spreadsheet.
+      Where coffee is grown, who ships it, and what a kilogram is worth at the border an interactive report built on live FAOSTAT data, pulled through the REST API rather than a spreadsheet.
     </p>
     <p class="byline">
       Mariann M. · <a href="https://www.linkedin.com/in/mmariann/" rel="noopener">LinkedIn</a>
@@ -277,8 +275,7 @@
         <h3>Modelling</h3>
         <p>Two fact tables, <strong>Production</strong> and <strong>Trade</strong>, share the <strong>Countries</strong> and <strong>Year</strong> dimensions, with a few disconnected tables for the field parameters.</p>
         <p>The measures live in a <code>_Measures</code> table, written in the <strong>DAX query view</strong> with comments, so they can be read and reviewed like code.</p>
-        <p>It is not a textbook star schema: the dimensions come straight out of the API response, not from a maintained warehouse. In a production setup this layer would not sit inside the report at all, it would live on the data platform, in the silver and gold layers of the medallion pattern.</p>
-      </div>
+       </div>
 
       <div class="card">
         <h3>Visuals</h3>

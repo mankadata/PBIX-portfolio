@@ -320,69 +320,58 @@
 
 <section class="limits">
   <div class="wrap">
-    <h2 class="section-head">Conclusion — what HTML visuals do not solve</h2>
+    <h2 class="section-head">Conclusion — What HTML visuals do not solve</h2>
+    <p class="lede">
+      Custom HTML visuals are popular right now, and the screenshots look great. People talk much less about the limits.
+    </p>
 
     <div class="callout">
       <p>Before you decide to impress your manager with a new and much more spectacular report, open the Power BI Service and check one thing: <strong>Admin portal → Tenant settings → Visuals</strong>. Has your administrator actually allowed custom visuals?</p>
-      <p>I have bad news. In a lot of companies the answer is no, or "certified only". And to be fair, the admin is not being difficult. A custom visual is third-party code running inside a report that shows company data, an uncertified one is allowed to call out to the internet, and nobody on the security team wants to find out where the numbers went.</p>
+      <p>I have bad news. In a lot of companies the answer is no, or "certified only" allowed. A custom visual is third-party code running inside a report that shows company data, an uncertified one is allowed to call out to the internet…</p>
     </div>
-
-    <p class="lede">
-      That is the first limit, and it is the one that stops the conversation before it starts. Custom HTML visuals are popular right now, and the screenshots look great. People talk much less about the rest of the list — and all of it applies to this report too, because I knew about it when I started.
-    </p>
 
     <div class="limit-list">
       <div class="limit">
         <strong>They cannot filter the report back.</strong>
         <div class="limit-body">
-          <p>An HTML visual gets filters, but it cannot send one. Click a bar in the waffle chart and nothing else on the page changes. The more of the page you give to HTML, the less the report works as a tool you can explore, and the more it becomes a poster.</p>
-          <p>This is the strongest argument against the approach, and it is why the map here stayed a native visual.</p>
+          <p>An HTML visual gets filters, but it cannot send one. If you click a bar in the waffle chart, nothing else on the page changes. The more of the page you give to HTML, the less the report works as a tool you can explore, and the more it becomes a poster.</p>
+          <p>This is the strongest argument against the approach.</p>
         </div>
       </div>
 
       <div class="limit">
         <strong>Accessibility is almost completely missing.</strong>
         <div class="limit-body">
-          <p>Screen readers cannot read inside the visual's iframe, and you cannot move through it with the keyboard. The alt text measures in this model help a little, but they do not fix it. In the public sector, or in a regulated company, this alone can stop the whole idea.</p>
+          <p>Screen readers cannot read inside the visual's iframe, and you cannot move through it with the keyboard.</p>
+          <p>The alt text measures in this model help a little, but they do not fix it. In the public sector, or in a regulated company, this alone can stop the whole idea.</p>
         </div>
       </div>
 
       <div class="limit">
-        <strong>It cannot be certified.</strong>
+        <strong>Certification, export and subscriptions.</strong>
         <div class="limit-body">
-          <p>To be certified in AppSource, a visual must not write raw input into the page and must not call out to the internet. That is exactly what an HTML visual does.</p>
-          <p>Certification is what makes two things work: export to PowerPoint, and the image that goes out with an email subscription. Neither works here. It also explains the tenant setting above — an HTML visual lands on the wrong side of that line by design, not by accident.</p>
-        </div>
-      </div>
-
-      <div class="limit">
-        <strong>Buying your way out has a price of its own.</strong>
-        <div class="limit-body">
-          <p>AppSource has visuals that solve a lot of this. I was not always happy with them, and some of the good ones want a subscription before the watermark disappears. Price and certification are separate questions: a visual can be certified and still cost money.</p>
-          <p>And in a company, the decision may not be yours at all — the policy can simply forbid installing anything.</p>
+          <p>As I mentioned, a visual that draws HTML cannot be certified in AppSource. To be certified, a visual must not write raw input into the page, and must not call out to the internet. That is exactly what an HTML visual does.</p>
+          <p>Certification is what makes two things work: export to PowerPoint, and the image that goes out with an email subscription. Neither works here.</p>
+          <p>It also explains the tenant setting above. An administrator can also allow certified visuals only, or turn off custom visuals completely. Then the report does not run at all.</p>
         </div>
       </div>
 
       <div class="limit">
         <strong>Someone has to maintain it, and that means documenting it.</strong>
         <div class="limit-body">
-          <p>There is no formatting pane. With a native visual the settings are visible to anyone who opens it; with a visual drawn in DAX, nothing is visible anywhere. The next person who opens this file has to read several hundred lines of HTML, CSS and SVG inside DAX text, so I wrote comments throughout.</p>
-          <p>That person has to be an advanced DAX reader and a BI developer at the same time, which is a much narrower hire than "someone who knows Power BI". AI can help write the documentation, and I think that is a fair use of it: the decisions are mine, the AI described them.</p>
-          <p class="limit-note">Documentation matters everywhere, not only here. I once took over a report that did not contain a single line of HTML, and it still felt like forever before I understood what was happening in it, and why it had been built that way. There was nothing written down, not even the stakeholder requests — so I was missing more than the logic, I was missing the intent. Documentation is not an extra, it is a basic condition.</p>
+          <p>There is no formatting pane. With a native visual the settings are visible to anyone who opens it; with a visual drawn in DAX, nothing is visible anywhere.</p>
+          <p>The next person who opens this file has to read several hundred lines of HTML, CSS and SVG inside DAX text, so I wrote comments throughout. That person also has to be an advanced DAX reader and a BI developer at the same time.</p>
+          <p>If the work is ever going to be handed over, it has to be documented well, and AI can help you with that part, which I think is a fair use of it.</p>
+          <p class="limit-note">Documentation matters everywhere, not only here. Once, I took over a report that did not contain a single line of HTML, and it still felt like forever before I understood what was happening in it, and why it had been built that way. There was nothing written down, not even the stakeholder requests. Documentation is not an extra, it is a basic condition.</p>
         </div>
       </div>
 
       <div class="limit">
-        <strong>Debugging is blind.</strong>
+        <strong>Performance and debugging.</strong>
         <div class="limit-body">
-          <p>Every HTML visual is an iframe with its own render cycle, and there is no developer console. If a text concatenation breaks, you get an empty box, not an error message.</p>
+          <p>If a text concatenation breaks, you get an empty box, not an error message.</p>
         </div>
       </div>
-    </div>
-
-    <div class="closing">
-      <p>So, the honest summary. This is a great technique for a pet project, a portfolio piece or a demo — anywhere you are the data owner, the developer and the support team at the same time. In a company, ask first. It is a much shorter conversation than the one that starts with "the report I rewrote does not load for anyone".</p>
-      <p>And if the answer is no, build it at home. That is what I did.</p>
     </div>
 
     <div class="colophon">

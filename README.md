@@ -92,9 +92,13 @@ Those layers are the larger part of our work, and the larger part of Power BI it
 
 ---
 
-### What HTML visuals do not solve
+### Conclusion - What HTML visuals do not solve
 
 Custom HTML visuals are popular right now, and the screenshots look great. People talk much less about the limits.
+
+Before you decide to impress your manager with a new and much more spectacular report, open the Power BI Service and check one thing: Admin portal → Tenant settings → Visuals. Has your administrator actually allowed custom visuals?<br>
+I have bad news. In a lot of companies the answer is no, or “certified only” allowed.A custom visual is third-party code running inside a report that shows company data, an uncertified one is allowed to call out to the internet...<br>
+Custom HTML visuals are popular right now, and the screenshots look great. People talk much less about the rest of the list.
 
 **They cannot filter the report back.** An HTML visual gets filters, but it cannot send one. If you click a bar in the waffle chart, nothing else on the page changes. The more of the page you give to HTML, the less the report works as a tool you can explore, and the more it becomes a poster. <br>
 This is the strongest argument against the approach.
@@ -102,15 +106,16 @@ This is the strongest argument against the approach.
 **Accessibility is almost completely missing.** Screen readers cannot read inside the visual’s iframe, and you cannot move through it with the keyboard. <br>
 The alt text measures in this model help a little, but they do not fix it. In the public sector, or in a regulated company, this alone can stop the whole idea.
 
-**Certification, export and subscriptions.** A visual that draws HTML cannot be certified in AppSource. To be certified, a visual must not write raw input into the page, and must not call out to the internet. That is exactly what an HTML visual does.<br>
+**Certification, export and subscriptions.** 
+As I mentioned, visual that draws HTML cannot be certified in AppSource. To be certified, a visual must not write raw input into the page, and must not call out to the internet. That is exactly what an HTML visual does. <br>
 Certification is what makes two things work: export to PowerPoint, and the image that goes out with an email subscription. Neither works here.<br>
-An administrator can also allow certified visuals only, or turn off custom visuals completely. Then the report does not run at all.
+It also explains the tenant setting above. An administrator can also allow certified visuals only, or turn off custom visuals completely. Then the report does not run at all.
 
 **Someone has to maintain it, and that means documenting it.** There is no formatting pane. With a native visual the settings are visible to anyone who opens it; with a visual drawn in DAX, nothing is visible anywhere. <br>
 The next person who opens this file has to read several hundred lines of HTML, CSS and SVG inside DAX text, so I wrote comments throughout. That person also has to be an advanced DAX reader and a BI developer at the same time. <br>
 If the work is ever going to be handed over, it has to be documented well, and AI can help you with that part, which I think is a fair use of it.
 
-> <sub> Documentation matters everywhere, not only here. I once took over a report that did not contain a single line of HTML, and it still felt like forever before I understood what was happening in it, and why it had been built that way. There was nothing written down, not even the stakeholder requests. Documentation is not an extra, it is a basic condition.</sub>
+> <sub> Documentation matters everywhere, not only here. Once, I took over a report that did not contain a single line of HTML, and it still felt like forever before I understood what was happening in it, and why it had been built that way. There was nothing written down, not even the stakeholder requests. Documentation is not an extra, it is a basic condition.</sub>
 
 **Performance and debugging.** If a text concatenation breaks, you get an empty box, not an error message.
 

@@ -130,7 +130,7 @@ The report is published as a read-only public embed. The visuals, the measures a
 I am happy for people to look at all of it, but not to copy it wholesale.<br>
 If you want to talk about how a particular part is built, ask me and I will walk you through it.
 
-© mankadata
-**Mariann M.** · [LinkedIn](https://www.linkedin.com/in/mmariann/)
+© mankadata <br>
+**Mariann M.** · [LinkedIn](https://www.linkedin.com/in/mmariann/) <br>
 Budapest, Hungary
 

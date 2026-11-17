@@ -121,16 +121,16 @@ If the work is ever going to be handed over, it has to be documented well, and A
 
 ---
 
-### Why there is no .pbix here
+### License
+
+#### Why there is no .pbix here
 
 The report is published as a read-only public embed. The visuals, the measures and the layout are the work. <br>
 
 I am happy for people to look at all of it, but not to copy it wholesale.<br>
 If you want to talk about how a particular part is built, ask me and I will walk you through it.
 
----
-
+© mankadata
 **Mariann M.** · [LinkedIn](https://www.linkedin.com/in/mmariann/)
-
 Budapest, Hungary
 
